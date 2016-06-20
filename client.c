@@ -24,19 +24,17 @@ void authenticate(int *sockfd){
 	memset(message, '\0', BUFSIZE);
 	fflush(stdout); 
 	recv(*sockfd, message, BUFSIZE, 0);   // receive welcome inside  
-	//memset(portnum, '\0', BUFSIZE); 
 
 	printf("%s", message); // Welcome inside
-	//send(*sockfd, "client port", BUFSIZE, 0); 
-    fgets(portnum, BUFSIZE, stdin); // get port number
-    send(*sockfd, portnum, BUFSIZE, 0); // send port number
+	fgets(portnum, BUFSIZE, stdin); // get port number
+    	send(*sockfd, portnum, BUFSIZE, 0); // send port number
 
-    char unameMsg[BUFSIZE];
-    recv(*sockfd, unameMsg, BUFSIZE, 0);
-    printf("%s", unameMsg);
-    char username[BUFSIZE];
-    fgets(username, BUFSIZE, stdin);
-    send(*sockfd, username, BUFSIZE, 0);
+    	char unameMsg[BUFSIZE];
+    	recv(*sockfd, unameMsg, BUFSIZE, 0);
+    	printf("%s", unameMsg);
+    	char username[BUFSIZE];
+    	fgets(username, BUFSIZE, stdin);
+	send(*sockfd, username, BUFSIZE, 0);
 }
 		
 void send_recv(int i, int sockfd)
@@ -118,20 +116,15 @@ int main1()
     	FD_SET(sockfd, &master);
 		fdmax = sockfd;
 		while(strcmp(breakc, "quit") != 0){
-			//printf("in the while\n");
 			read_fds = master;
 			if(select(fdmax+1, &read_fds, NULL, NULL, NULL) == -1){
 				perror("select");
 				strcpy(breakc, "quit");
 			}
-		
-			//printf("List of Active Users: \n");
+
 			for(i=0; i <= fdmax; i++ ){
-				//printf("in the for\n");
 				if(FD_ISSET(i, &read_fds)){
-					//printf("in the if\n");
 					send_recv(i, sockfd);
-					//printf("What do you want to do\n");
 				}
 			}
 		}
@@ -157,12 +150,10 @@ void connect_request2(int *sock, struct sockaddr_in *server_addr)
 	printf("Enter the ip address to connect to: ");
 	fflush(stdout);
 	fgets(ipAddr, BUFSIZE, stdin);;
-	//fgets(ipAddr, BUFSIZE, stdin);
 
 	printf("Enter port number to of server: ");
 	fflush(stdout);
 	fgets(portChar, BUFSIZE, stdin);
-	//fgets(portChar, BUFSIZE, stdin);
 	sscanf(portChar, "%d", &portnum);
 	printf("--------\n");
 
@@ -228,9 +219,6 @@ int main(){
 	int sel2; 
 	strcpy(breakc, "start");
 	while(1){
-
-		//memset(msg, 0, BUFSIZE);
-
     	// print menu
     	printf("Please pick an option from the menu\n");
     	printf("-----------------------------------\n");
@@ -240,25 +228,23 @@ int main(){
     	printf("Selection: ");
 
     	// get user's selection
-    	//sel = getc(stdin);
     	fgets(sel, BUFSIZE, stdin);
     	sscanf(sel, "%d", &sel2);
 
-    	switch(sel2){
-    		case 1 :
-    			while(strcmp(breakc, "quit") != 0){
-    				main1(); 
-    			}
-    			strcpy(breakc, "start");
-    			break;
+    		switch(sel2){
+    			case 1 :
+    				while(strcmp(breakc, "quit") != 0){
+    					main1(); 
+    				}
+    				strcpy(breakc, "start");
+    				break;
 
-    		case 2 :
-    			while(strcmp(breakc, "quit") != 0){ main2();}
-    			strcpy(breakc, "start");
-    			break;
-    		default :
-    			exit(0); 		
-
-    	}
+    			case 2 :
+    				while(strcmp(breakc, "quit") != 0){ main2();}
+    				strcpy(breakc, "start");
+    				break;
+    			default :
+    				exit(0); 		
+    		}
 	}
 }
