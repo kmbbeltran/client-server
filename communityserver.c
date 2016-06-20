@@ -15,7 +15,6 @@ char* IPs[5] = {NULL, NULL, NULL, NULL, NULL}; //arrray of ip addresses
 int cli_ports[5]; //array of ports
 int ls_ports[5]; 
 char* username[5]; 
-//memset(IPs, '\0', sizeof((char*)*15));
 
 void error(const char *msg)
 {
@@ -32,13 +31,12 @@ void rm_client(int i){
 
 	int k; 
 	for(k=0; k<5; k++){
-	   printf("Username: %s ", username[k]); 
-       printf("IPs: %s ", IPs[k]);
-       printf("Ports: %d ", cli_ports[k]);
-       printf("Client Ports: %d ", ls_ports[k]);
-       printf("\n");
+		printf("Username: %s ", username[k]); 
+       		printf("IPs: %s ", IPs[k]);
+       		printf("Ports: %d ", cli_ports[k]);
+       		printf("Client Ports: %d ", ls_ports[k]);
+       		printf("\n");
 	}
-	   
 }
 
 		
@@ -58,22 +56,14 @@ void transfer(int i, fd_set *test, int sockfd, int max)
 		close(i);
 		FD_CLR(i, test);
 	}else { 
-		//fflush(stdout);
 		printf("recv_buf: %s\n", recv_buf);
 		memset(recv_buf, '\0', BUFSIZE);
-		//fflush(stdout);
 		int t = 0;
 		for(; t < 5; t++){
 			if(IPs[t] != NULL){
-				/*fflush(stdout);
-				send(i, username[t], BUFSIZE - (strlen(username[t]) -1), 0);*/ 
 				char str[BUFSIZE];
-				/*send(i, username[t], BUFSIZE, 0);
-				send(i, IPs[t], BUFSIZE, 0);*/
 				char* str1 = malloc(16);
 				snprintf(str1, 16, "%d", ls_ports[t]);
-				//printf("this is client's port: %s\n", str1);
-				//send(i, str, BUFSIZE, 0);
 				strcpy(str, username[t]);
 				strcat(str, "\n");
 				strcat(str, IPs[t]);
@@ -81,7 +71,6 @@ void transfer(int i, fd_set *test, int sockfd, int max)
 				strcat(str, str1);
 				printf("sending to client: %s\n", str);
 				send(i, str, BUFSIZE, 0);
-				//send(i, "hello everyone!\n", BUFSIZE, 0);
 			}
 		}
 
@@ -107,41 +96,25 @@ void newConnection(fd_set *test, int *max, int sockfd, struct sockaddr_in *clien
 	}else {
 	    send(newsockfd, authenticate, BUFSIZE, 0);  // sends enter password
 		memset(authenticate, '\0', BUFSIZE);
-		//printf("authenticate: %s\n", authenticate);
-		//fflush(stdout);
 		recv(newsockfd, authenticate, BUFSIZE, 0);  // get password
-		//printf("authenticate: %s\n", authenticate);
-		//printf("----1---\n");
 		int check = strcmp(password, authenticate);
-		//printf("----2---\n");
 		printf("check: %d\n", check);
 		if(check == 0){
 			printf("user is verified\n");
-
-
 			send(newsockfd, "Welcome inside, Enter your local port number: ", BUFSIZE, 0);
-          //  fflush(stdout); 
             memset(portnum, '\0', BUFSIZE);
             recv(newsockfd, portnum, BUFSIZE, 0);
             printf("client port number: %s\n", portnum);
 
             send(newsockfd, "Enter username: ", BUFSIZE, 0); 
-            //fflush(stdout); 
             memset(name, '\0', BUFSIZE);
             recv(newsockfd, name, BUFSIZE, 0);
-
-
-
 		}else{
 			
 			send(newsockfd, "Wrong password", 255, 0);
 			close(newsockfd);
 			FD_CLR(newsockfd, test);
 		}
-
-
-
-
 
 		FD_SET(newsockfd, test);
 		if(newsockfd > *max){
@@ -172,8 +145,6 @@ void newConnection(fd_set *test, int *max, int sockfd, struct sockaddr_in *clien
 				break;
 			}
 		}
-	
-
 	}
 }
 	
@@ -234,7 +205,6 @@ int main()
 				}
 				else{
 					printf("I != sockfd\n\n");
-					//fflush(stdout);
 					transfer(i, &test, sockfd, max);
 				}
 			}
